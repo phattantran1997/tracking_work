@@ -4,32 +4,27 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AboutScreen from './AboutScreen';
 import HistoryScreen from './HistoryScreen';
 import ScanScreen from './ScanScreen';
-import SettingScreen from './SettingScreen';
+import InputScreen from './InputScreen';
 import HomeListProducts from './HomeListProducts';
-import { View,Text } from 'react-native';
+
+import useThemeContext from '../../theme/useThemeContext';
 
 const Tab = createBottomTabNavigator();
 
-const CustomHeader = () => {
-  return (
-    <View style={{marginTop:70, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'lightblue' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Tracking Work</Text>
-      <Ionicons name="person-circle-outline" size={24} color="black" />
-    </View>
-  );
-};
 const HomeTabNavigator = () => {
+  const { colors } = useThemeContext();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        header: () => <CustomHeader />,
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name === 'About') {
             iconName = focused ? 'information-circle' : 'information-circle-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (route.name === 'Input') {
+            iconName = focused ? 'create' : 'create-outline';
           } else if (route.name === 'Scan') {
             iconName = focused ? 'scan-circle' : 'scan-circle-outline';
           } else if (route.name === 'History') {
@@ -37,11 +32,16 @@ const HomeTabNavigator = () => {
           }else if (route.name === 'List') {
             iconName = focused ? 'list' : 'list-outline';
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          backgroundColor:  colors.backgrounds.soft,
+        },
+        tabBarLabelStyle: {
+          color: colors.text,
+        },
       })}
     >
 
@@ -49,7 +49,7 @@ const HomeTabNavigator = () => {
       <Tab.Screen name="List" component={HomeListProducts} />
       <Tab.Screen name="Scan" component={ScanScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
-      <Tab.Screen name="Settings" component={SettingScreen} />
+      <Tab.Screen name="Input" component={InputScreen} />
 
     </Tab.Navigator>
   );

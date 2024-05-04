@@ -50,8 +50,8 @@ export default function ScanScreen() {
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome to the Barcode Scanner App!</Text>
-        <Text style={styles.paragraph}>Scan a barcode to start your job.</Text>
+        <Text style={styles.title}>Scan a barcode to start your job.!</Text>
+        {/* <Text style={styles.paragraph}>Scan a barcode to start your job.</Text> */}
         {isFocused ? renderCamera() : null}
       </View>
     );

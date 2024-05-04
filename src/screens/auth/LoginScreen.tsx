@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useThemeContext from '../../theme/useThemeContext';
 
 export default function LoginScreen({ icon }) {
   const [username, setUsername] = useState('test');
@@ -19,18 +20,19 @@ export default function LoginScreen({ icon }) {
   const handleSignUp = () => {
     navigation.navigate('Signup');
   };
-
+  const {colors} = useThemeContext();
   return (
+   
     <View style={styles.container}>
       <Image source={icon} style={styles.icon} />
       <TextInput
-        style={styles.input}
+        style={[styles.input,{color:colors.text,borderColor:colors.text}]}
         onChangeText={setUsername}
         value={username}
         placeholder="Username"
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input,{color:colors.text,borderColor:colors.text}]}
         onChangeText={setPassword}
         value={password}
         placeholder="Password"
