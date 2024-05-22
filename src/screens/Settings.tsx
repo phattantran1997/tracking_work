@@ -1,12 +1,22 @@
-import { StyleSheet, Switch, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Switch, View, Button } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import BodyText from '../components/BodyText';
 import Heading from '../components/Heading';
 import theme from '../theme/theme';
 import useThemeContext from '../theme/useThemeContext';
 
 export default function SettingsScreen() {
+
   const { colors, isSystemTheme, systemTheme, colorTheme, setColorTheme } =
     useThemeContext();
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('accessToken'); // remove access token from local storage
+    navigation.navigate('Login'); // navigate to Login screen
+  };
 
   return (
     <View
@@ -53,6 +63,7 @@ export default function SettingsScreen() {
           value={colorTheme === 'dark'}
         />
       </View>
+      <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 }

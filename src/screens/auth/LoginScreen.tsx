@@ -1,41 +1,95 @@
-import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useThemeContext from '../../theme/useThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { NGROK_SERVER } from '../../services/ConstantFile';
 
 export default function LoginScreen({ icon }) {
-  const [username, setUsername] = useState('test');
-  const [password, setPassword] = useState('test');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const { colors } = useThemeContext();
 
-  const handleLogin = () => {
-    if(username ==='test' && password === 'test') {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
+  useEffect(() => {
+    const validateToken = async () => {
+      const isValid = await checkAccessToken();
+      if (isValid) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
+      }
+    };
+    validateToken();
+  }, [navigation]);
+
+  const checkAccessToken = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) return false;
+
+      const response = await axios.get(`${NGROK_SERVER}/auth/check-token`, {
+        headers: {
+          Authorization: `${accessToken}`,
+        },
       });
+      return response.data.isValid;
+    } catch (error) {
+      console.error('Error checking access token', error);
+      return false;
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${NGROK_SERVER}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+      if (data.errCode === 200) {
+        await AsyncStorage.setItem('accessToken', data.data.accessToken);
+        await AsyncStorage.setItem('userLogin', username);
+        const targetRoute = data.data.role === 'staff' ? 'Home' : 'HomeManager';
+        navigation.reset({
+          index: 0,
+          routes: [{ name: targetRoute }],
+        });
+      } else {
+        Alert.alert('Login failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
 
   const handleSignUp = () => {
     navigation.navigate('Signup');
   };
-  const {colors} = useThemeContext();
+
   return (
-   
     <View style={styles.container}>
       <Image source={icon} style={styles.icon} />
       <TextInput
-        style={[styles.input,{color:colors.text,borderColor:colors.text}]}
+        style={[styles.input, { color: colors.text, borderColor: colors.text }]}
         onChangeText={setUsername}
         value={username}
         placeholder="Username"
+        placeholderTextColor={colors.text}
+        autoCapitalize="none" 
       />
       <TextInput
-        style={[styles.input,{color:colors.text,borderColor:colors.text}]}
+        style={[styles.input, { color: colors.text, borderColor: colors.text }]}
         onChangeText={setPassword}
         value={password}
         placeholder="Password"
+        placeholderTextColor={colors.text}
         secureTextEntry
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
+import { NGROK_SERVER } from '../../services/ConstantFile';
 export default function SignUpScreen({ icon }) {
     const [username, setUsername] = useState('');
+    const [name,setName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigation = useNavigation();
@@ -16,9 +17,11 @@ export default function SignUpScreen({ icon }) {
         }
 
         try {
-            const response = await axios.post('https://your-api.com/sign-up', {
+            const response = await axios.post(`${NGROK_SERVER}/auth/register`, {
                 username,
                 password,
+                name,
+                role: "Staff"
             });
 
             if (response.data.success) {
@@ -38,6 +41,12 @@ export default function SignUpScreen({ icon }) {
     return (
         <View style={styles.container}>
             <Image source={icon} style={styles.icon} />
+            <TextInput
+                style={styles.input}
+                onChangeText={setName}
+                value={name}
+                placeholder="Full Name"
+            />
             <TextInput
                 style={styles.input}
                 onChangeText={setUsername}

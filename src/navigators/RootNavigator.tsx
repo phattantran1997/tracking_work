@@ -5,11 +5,14 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HomeTabNavigator from '../screens/homepage/HomeTabNavigator';
 import SettingsScreen from '../screens/Settings';
 import logo from '../../assets/logo.png';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Image } from 'react-native';
+import HomeManager from '../screens/homepageManager/HomePageManager';
+import HomeTabNavigator from '../screens/homepageStaff/HomeTabNavigator';
+import ProductDetail from '../screens/homepageStaff/products/ProductDetail';
 const Stack = createNativeStackNavigator();
 function LogoTitle() {
     return (
@@ -23,6 +26,7 @@ export default function RootNavigator() {
     const { colors } = useThemeContext();
 
     return (
+        <GestureHandlerRootView style={{flex:1}}>
         <Stack.Navigator
             screenOptions={{
                 headerStyle: { backgroundColor: colors.backgrounds.soft },
@@ -43,6 +47,23 @@ export default function RootNavigator() {
                 component={HomeTabNavigator}
                 options={({ navigation }) => ({
                     headerTitle: (props) => <LogoTitle {...props} />,
+                    headerLeft: ()=> null,
+                    headerRight: () => (
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Settings')}
+                            style={{ marginRight: 15 }}
+                        >
+                            <Ionicons name="settings-outline" size={24} color="#00cc00" />
+                        </TouchableOpacity>
+                    ),
+                })}
+            />
+            <Stack.Screen
+                name="HomeManager"
+                component={HomeManager}
+                options={({ navigation }) => ({
+                    headerTitle: (props) => <LogoTitle {...props} />,
+                    headerLeft: ()=> null,
                     headerRight: () => (
                         <TouchableOpacity
                             onPress={() => navigation.navigate('Settings')}
@@ -54,6 +75,8 @@ export default function RootNavigator() {
                 })}
             />
             <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="ProductDetail" component={ProductDetail} />
         </Stack.Navigator>
+        </GestureHandlerRootView>
     );
 }

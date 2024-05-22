@@ -4,8 +4,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AboutScreen from './AboutScreen';
 import HistoryScreen from './HistoryScreen';
 import ScanScreen from './ScanScreen';
-import InputScreen from './InputScreen';
-import HomeListProducts from './HomeListProducts';
+import InputScreen from './GenerateQRScreen';
+import HomeListProducts from './products/HomeListProducts';
 
 import useThemeContext from '../../theme/useThemeContext';
 

@@ -1,14 +1,15 @@
 import React,{ useEffect, useState } from 'react';
 import { useIsFocused } from "@react-navigation/native";
-import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { StyleSheet, Text, Vibration, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
+import { CameraView ,useCameraPermissions} from 'expo-camera';
 
 export default function ScanScreen() {
     const [hasPermission, setHasPermission] = useState<any>(null);
     const [scanned, setScanned] = useState(true);
     const isFocused = useIsFocused();
-  
+    const [permission, requestPermission] = useCameraPermissions();
+
     useEffect(() => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -32,7 +33,8 @@ export default function ScanScreen() {
     const renderCamera = () => {
       return (
         <View style={styles.cameraContainer}>
-          <Camera onBarCodeScanned={handleBarCodeScanned} style={styles.camera} />
+          <CameraView onBarcodeScanned={handleBarCodeScanned} style={styles.camera} >
+      </CameraView>
         </View>
       );
     };
