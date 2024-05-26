@@ -3,7 +3,9 @@ import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, Image } fro
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { NGROK_SERVER } from '../../services/ConstantFile';
-export default function SignUpScreen({ icon }) {
+import icon from '../../../assets/logo.png'
+
+export default function SignUpScreen() {
     const [username, setUsername] = useState('');
     const [name,setName] = useState('');
     const [password, setPassword] = useState('');
@@ -106,9 +108,9 @@ const styles = StyleSheet.create({
         color: '#ffffff',
     },
     icon: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
         marginBottom: 50,
-        borderRadius: 50,
+        borderRadius: 100,
       },
 });

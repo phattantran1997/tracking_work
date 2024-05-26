@@ -6,6 +6,7 @@ import { NGROK_SERVER } from '../../../services/ConstantFile';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Heading from '../../../components/Heading';
 
 const HomeListProducts = ({ navigation }) => {
     const [data, setData] = useState([]);
@@ -67,6 +68,9 @@ const HomeListProducts = ({ navigation }) => {
                 </View>
 
             )}
+            friction={1}
+            overshootFriction={10}
+
         >
             <TouchableOpacity
                 style={styles.itemContainer}
@@ -83,7 +87,9 @@ const HomeListProducts = ({ navigation }) => {
         </Swipeable>
     );
     return (
+      
         <SafeAreaView style={styles.container}>
+            <Heading style={styles.heading}>List all Products</Heading>
             <FlatList
                 data={data}
                 renderItem={renderItem}
@@ -100,6 +106,13 @@ const HomeListProducts = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginTop: 16,
+        textAlign: 'center',
     },
     flatListContainer: {
         paddingVertical: 16,
@@ -143,6 +156,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         height: '100%',
         paddingHorizontal: 16,
+        marginRight:10
     },
     deleteButtonText: {
         color: 'white',

@@ -1,18 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import useThemeContext from '../theme/useThemeContext';
-import SignUpScreen from '../screens/auth/SignUpScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
+
+import SettingsScreen from '../screens/Setting/Settings';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SettingsScreen from '../screens/Settings';
 import logo from '../../assets/logo.png';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Image } from 'react-native';
-import HomeManager from '../screens/homepageManager/HomePageManager';
-import HomeTabNavigator from '../screens/homepageStaff/HomeTabNavigator';
-import ProductDetail from '../screens/homepageStaff/products/ProductDetail';
+import HomeTabNavigator from '../screens/PageStaff/StackNavigatorStaff';
+import ProductDetail from '../screens/PageStaff/products/ProductDetail';
+import LoginScreen from '../screens/Auth/LoginScreen';
+import SignUpScreen from '../screens/Auth/SignUpScreen';
+import HomeManager from '../screens/PageManager/StackNavigatorManager';
 const Stack = createNativeStackNavigator();
 function LogoTitle() {
     return (

@@ -8,7 +8,9 @@ import {
     TextInput,
     View,
     TouchableOpacity,
-    Alert
+    Alert,
+    FlatList,
+    Share
 } from "react-native";
 import { Text } from "react-native";
 import QRCode from "react-native-qrcode-svg";
@@ -28,14 +30,28 @@ export default function InputScreen() {
     const [note, setNote] = useState("");
     const [qrCode, setQRCode] = useState("");
     const [jobNo, setJobNo] = useState("");
-    const types = [
-        "Electronics",
-        "Clothing",
-        "Books",
-        "Beauty",
-        "Home",
-        "Sports",
-    ];
+    const [filteredJobNos, setFilteredJobNos] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const getDataJobno = async (text) => {
+        if (text.length === 0) {
+            setFilteredJobNos([]);
+            setShowDropdown(false);
+            return;
+        }
+        const response = await axios.get(`${NGROK_SERVER}/api/products/getDataJobNo`, {
+            headers: {
+                Authorization: await AsyncStorage.getItem('accessToken'),
+            }
+        });
+        const jobNoValues = response.data.map((item) => item.jobno);
+        const filtered = jobNoValues.filter((listItem) => listItem.toLowerCase().includes(text.toLowerCase()));
+        setFilteredJobNos(filtered);
+        setShowDropdown(true);
+    }
+
+
+
 
     const handleInputChange = async () => {
         if (!name || !type || !description) {
@@ -54,7 +70,7 @@ export default function InputScreen() {
             DepthDim: parseFloat(height),
             LengthDim: parseFloat(length),
             Description: description,
-            Area:  parseFloat(width) * parseFloat(height) * parseFloat(length),
+            Area: parseFloat(width) * parseFloat(height) * parseFloat(length),
             Weight: parseFloat(weight),
             QRCode: `Name: ${name}, JobNo: ${jobNo}`
         };
@@ -67,7 +83,8 @@ export default function InputScreen() {
 
             const response = await axios.post(NGROK_SERVER + '/api/products/createOne', data, { headers });
             if (response.data.errCode === 200) {
-                setQRCode(response.data.data.QRCode);
+                let value= response.data.data;
+                setQRCode(JSON.stringify({ID:value.id, Name : value.Name , JobNo: value.JobNo}));
                 Alert.alert('Product created successfully');
             } else {
                 Alert.alert('Product creation failed');
@@ -78,12 +95,36 @@ export default function InputScreen() {
         }
     };
 
+
     const handlePrint = async () => {
-
+        try {
+            const result = await Share.share({
+                message: qrCode
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error: any) {
+            Alert.alert(error.message);
+        }
     };
-
+    const handleJobNoChange = async (text) => {
+        setJobNo(text);
+        await getDataJobno(text);
+    };
+    const handleItemPress = (item) => {
+        setJobNo(item);
+        setFilteredJobNos([]);
+        setShowDropdown(false);
+    };
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} automaticallyAdjustKeyboardInsets={true}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={handlePrint}>
                     <Icon name="print" size={24} color="black" />
@@ -115,13 +156,29 @@ export default function InputScreen() {
                     placeholderTextColor={"black"}
                     keyboardType="decimal-pad"
                 />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setJobNo}
-                    value={jobNo}
-                    placeholder="Job Number"
-                    placeholderTextColor={"black"}
-                />
+                <View style={styles.dropdownContainer}>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={handleJobNoChange}
+                        value={jobNo}
+                        placeholder="Job Number"
+                        placeholderTextColor={"black"}
+                    />
+
+                    {showDropdown && filteredJobNos.length > 0 && (
+                        <FlatList
+                            data={filteredJobNos}
+                            scrollEnabled={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity style={styles.item} onPress={() => handleItemPress(item)}>
+                                    <Text>{item}</Text>
+                                </TouchableOpacity>
+                            )}
+                            style={styles.dropdown}
+                        />
+                    )}
+                </View>
                 <TextInput
                     style={styles.input}
                     onChangeText={setDescription}
@@ -206,6 +263,26 @@ const styles = StyleSheet.create({
     generateButtonText: {
         color: "white",
         fontWeight: "bold",
+    },
+    dropdownContainer: {
+        position: 'relative',
+        zIndex: 10,
+    },
+    dropdown: {
+        position: 'absolute',
+        top: 60, // Adjust based on input height
+        width: '100%',
+        backgroundColor: '#fff',
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 8,
+        maxHeight: 150,
+        zIndex: 10,
+    },
+    item: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
     },
     pickerStyles: {
         width: '100%',

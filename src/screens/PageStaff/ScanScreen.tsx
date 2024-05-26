@@ -1,8 +1,11 @@
 import React,{ useEffect, useState } from 'react';
 import { useIsFocused } from "@react-navigation/native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
 import { CameraView ,useCameraPermissions} from 'expo-camera';
+import axios from 'axios';
+import { NGROK_SERVER } from '../../services/ConstantFile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ScanScreen() {
     const [hasPermission, setHasPermission] = useState<any>(null);
@@ -17,16 +20,43 @@ export default function ScanScreen() {
       })();
     }, []);
   
-    const handleBarCodeScanned = ({ type, data }: any) => {
+    const handleBarCodeScanned = async ({ type, data }: any) => {
       if (scanned) {
         setScanned(false);
         if (data) {
           Vibration.vibrate();
-          alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+          try {
+            // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+            const token = await AsyncStorage.getItem('accessToken');
+            const headers = {
+                Authorization: `${token}`
+            };
+            data = JSON.parse(data);
+
+            const requestData ={
+              ProductID: data.ID,
+              JobNo : data.JobNo,
+              OperatorID: await AsyncStorage.getItem('userLogin'),
+              JobTime: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+              JobDay: new Date().toISOString().slice(0, 10).split('-').reverse().join('/'),
+      
+            }
+            console.log(requestData);
+            const response = await axios.post(NGROK_SERVER + '/api/JobTimings/createOne', requestData, { headers });
+            if (response.data.errCode === 200) {
+              Alert.alert('Creation success');
+            } else {
+                Alert.alert('Product creation failed');
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+        }
         }
         setTimeout(() => {
           setScanned(true);
-        }, 2000);
+        }, 5000);
       }
     };
   

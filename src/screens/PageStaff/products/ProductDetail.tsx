@@ -48,7 +48,7 @@ const ProductDetail = ({ route }) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageContainer}>
-          {item.QRCode && <QRCode value={item.QRCode} size={200} />}
+          {item.QRCode && <QRCode value={JSON.stringify({ID:item.id, Name : item.Name , JobNo: item.JobNo}) } size={200} />}
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.headerRow}>

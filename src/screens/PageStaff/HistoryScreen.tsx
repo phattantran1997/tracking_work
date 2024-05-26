@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import BodyText from '../../components/BodyText';
 import Heading from '../../components/Heading';
 import useThemeContext from '../../theme/useThemeContext';
@@ -10,25 +10,29 @@ import { NGROK_SERVER } from '../../services/ConstantFile';
 const HistoryScreen = () => {
   const { colors } = useThemeContext();
   const [jobTimings, setJobTimings] = useState([]);
-
+  const [refreshing, setRefreshing] = useState(false);
+  const fetchJobTimings = async () => {
+    try {
+      const userLogin = await AsyncStorage.getItem('userLogin');
+      const token = await AsyncStorage.getItem('accessToken');
+      const response = await axios.get(`${NGROK_SERVER}/api/JobTimings/getByOperatorID?operatorID=${userLogin}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setJobTimings(response.data);
+    } catch (error) {
+      console.error('Error fetching job timings:', error);
+    }
+  };
   useEffect(() => {
-    const fetchJobTimings = async () => {
-      try {
-        const userLogin = await AsyncStorage.getItem('userLogin');
-        const token = await AsyncStorage.getItem('accessToken');
-        const response = await axios.get(`${NGROK_SERVER}/api/JobTimings/getByOperatorID?operatorID=${userLogin}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setJobTimings(response.data);
-      } catch (error) {
-        console.error('Error fetching job timings:', error);
-      }
-    };
-
     fetchJobTimings();
   }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchJobTimings().then(() => setRefreshing(false));
+}, [fetchJobTimings]);
 
   const getBackgroundColor = (status) => {
     switch (status) {
@@ -44,6 +48,7 @@ const HistoryScreen = () => {
   const renderItem = ({ item }) => (
     <View style={[styles.jobTimingContainer, { backgroundColor: getBackgroundColor(item.Status) }]}>
       <BodyText style={styles.jobTimingText}>Job No: {item.JobNo}</BodyText>
+      <BodyText style={styles.jobTimingText}>Product ID: {item.ProductID}</BodyText>
       <BodyText style={styles.jobTimingText}>Operator ID: {item.OperatorID}</BodyText>
       <BodyText style={styles.jobTimingText}>Job Time: {item.JobTime}</BodyText>
       <BodyText style={styles.jobTimingText}>Job Day: {item.JobDay}</BodyText>
@@ -60,6 +65,9 @@ const HistoryScreen = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.flatListContent}
+        refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
@@ -88,11 +96,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderRadius: 8,
-    elevation: 3, // For Android shadow
-    shadowColor: '#000', // For iOS shadow
-    shadowOffset: { width: 0, height: 2 }, // For iOS shadow
-    shadowOpacity: 0.2, // For iOS shadow
-    shadowRadius: 4, // For iOS shadow
+    elevation: 3,
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 4,
   },
   jobTimingText: {
     fontSize: 16,

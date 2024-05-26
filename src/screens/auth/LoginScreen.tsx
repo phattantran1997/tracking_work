@@ -5,8 +5,8 @@ import useThemeContext from '../../theme/useThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantFile';
-
-export default function LoginScreen({ icon }) {
+import icon from '../../../assets/logo.png'
+export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     marginBottom: 50,
-    borderRadius: 50,
+    borderRadius: 100,
   },
   input: {
     height: 40,

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Switch, View, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import BodyText from '../components/BodyText';
-import Heading from '../components/Heading';
-import theme from '../theme/theme';
-import useThemeContext from '../theme/useThemeContext';
+import BodyText from '../../components/BodyText';
+import Heading from '../../components/Heading';
+import theme from '../../theme/theme';
+import useThemeContext from '../../theme/useThemeContext';
 
 export default function SettingsScreen() {
 
