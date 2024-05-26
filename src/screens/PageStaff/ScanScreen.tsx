@@ -6,6 +6,7 @@ import { CameraView ,useCameraPermissions} from 'expo-camera';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantFile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BodyText from '../../components/BodyText';
 
 export default function ScanScreen() {
     const [hasPermission, setHasPermission] = useState<any>(null);
@@ -76,13 +77,13 @@ export default function ScanScreen() {
     if (hasPermission === false) {
       return (
         <View style={styles.container}>
-          <Text>Camera permission not granted</Text>
+          <BodyText>Camera permission not granted</BodyText>
         </View>
       );
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Scan a barcode to start your job.!</Text>
+        <BodyText style={[styles.title]}>Scan a barcode to start your job.!</BodyText>
         {/* <Text style={styles.paragraph}>Scan a barcode to start your job.</Text> */}
         {isFocused ? renderCamera() : null}
       </View>
@@ -96,7 +97,6 @@ export default function ScanScreen() {
       justifyContent: "center",
     },
     title: {
-      fontSize: 24,
       fontWeight: "bold",
       marginBottom: 20,
     },

@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ScreenA, ScreenB } from './Screens';
 import GenerateQRScreen from './GenerateQRScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ListAllJobtimings from './ListAllJobtimingScreen';
+import ListAllJobtimings from './JobtimingsScreen';
+import ProductScreen from './ProductsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +16,7 @@ function HomeManager() {
 
           if (route.name === 'GenerateQRScreen') {
             iconName = focused ? 'qr-code' : 'qr-code-outline';
-          } else if (route.name === 'ScreenB') {
+          } else if (route.name === 'ProductScreen') {
             iconName = focused ? 'apps' : 'apps-outline';
           } else if (route.name === 'Jobtimings') {
             iconName = focused ? 'time' : 'time-outline';
@@ -29,7 +29,7 @@ function HomeManager() {
       })}
     >
       <Tab.Screen name="GenerateQRScreen" component={GenerateQRScreen} />
-      <Tab.Screen name="ScreenB" component={ScreenB} />
+      <Tab.Screen name="ProductScreen" component={ProductScreen} />
       <Tab.Screen name="Jobtimings" component={ListAllJobtimings} />
     </Tab.Navigator>
   );

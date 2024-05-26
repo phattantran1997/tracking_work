@@ -89,7 +89,7 @@ const HomeListProducts = ({ navigation }) => {
     return (
       
         <SafeAreaView style={styles.container}>
-            <Heading style={styles.heading}>List all Products</Heading>
+            <Heading style={[styles.heading]}>List all Products</Heading>
             <FlatList
                 data={data}
                 renderItem={renderItem}
@@ -108,11 +108,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     heading: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#333',
         marginTop: 16,
-        textAlign: 'center',
     },
     flatListContainer: {
         paddingVertical: 16,

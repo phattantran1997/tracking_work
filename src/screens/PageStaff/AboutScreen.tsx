@@ -49,14 +49,14 @@ const AboutScreen = () => {
   
     return (
       <Animated.View style={[styles.container, { backgroundColor: colors.backgrounds.default, opacity: fadeAnim }]}>
-        <Heading style={styles.heading}>Welcome {userLogin} to the app!</Heading>
-        <BodyText style={styles.text}>
+        <Heading>Welcome {userLogin} to the app!</Heading>
+        <BodyText style={[styles.text]}>
           {isFocused ? 'HomeTab is focused' : 'HomeTab is not focused'}
         </BodyText>
-        <BodyText style={styles.descriptionText}>
+        <BodyText style={[styles.descriptionText]}>
           This app helps workers scan their productivity to check their working time.
         </BodyText>
-        <Heading style={styles.heading}>Open Source Licenses</Heading>
+        <Heading>Open Source Licenses</Heading>
         <FlatList
           data={licenseData}
           renderItem={renderLicenseItem}
@@ -74,22 +74,13 @@ const AboutScreen = () => {
       paddingHorizontal: 16,
       justifyContent: 'center',
     },
-    heading: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#333',
-      marginBottom: 16,
-      textAlign: 'center',
-    },
+
     text: {
       fontSize: 18,
-      color: '#555',
       textAlign: 'center',
       marginBottom: 16,
     },
     descriptionText: {
-      fontSize: 16,
-      color: '#666',
       textAlign: 'center',
       marginBottom: 24,
     },

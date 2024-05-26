@@ -16,8 +16,8 @@ export default function Heading({ style, ...props }: Props) {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 21,
-    lineHeight: 28,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

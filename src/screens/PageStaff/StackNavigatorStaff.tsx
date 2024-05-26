@@ -4,10 +4,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AboutScreen from './AboutScreen';
 import HistoryScreen from './HistoryScreen';
 import ScanScreen from './ScanScreen';
-import InputScreen from './GenerateQRScreen';
 import HomeListProducts from './products/HomeListProducts';
 
 import useThemeContext from '../../theme/useThemeContext';
+import ManualInputScreen from './ManualInputScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +23,7 @@ const HomeTabNavigator = () => {
 
           if (route.name === 'About') {
             iconName = focused ? 'information-circle' : 'information-circle-outline';
-          } else if (route.name === 'Input') {
+          } else if (route.name === 'Manual') {
             iconName = focused ? 'create' : 'create-outline';
           } else if (route.name === 'Scan') {
             iconName = focused ? 'scan-circle' : 'scan-circle-outline';
@@ -49,7 +49,7 @@ const HomeTabNavigator = () => {
       <Tab.Screen name="List" component={HomeListProducts} />
       <Tab.Screen name="Scan" component={ScanScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
-      <Tab.Screen name="Input" component={InputScreen} />
+      <Tab.Screen name="Manual" component={ManualInputScreen} />
 
     </Tab.Navigator>
   );

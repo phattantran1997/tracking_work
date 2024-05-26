@@ -14,12 +14,19 @@ export default function LoginScreen() {
 
   useEffect(() => {
     const validateToken = async () => {
-      const isValid = await checkAccessToken();
-      if (isValid) {
+      const user = await checkAccessToken();
+      if (user.role ==='staff') {
         navigation.reset({
           index: 0,
           routes: [{ name: 'Home' }],
         });
+      }else if(user.role ==='manager'){
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'HomeManager' }],
+        });
+      }else{
+        
       }
     };
     validateToken();
@@ -35,7 +42,7 @@ export default function LoginScreen() {
           Authorization: `${accessToken}`,
         },
       });
-      return response.data.isValid;
+      return response.data;
     } catch (error) {
       console.error('Error checking access token', error);
       return false;

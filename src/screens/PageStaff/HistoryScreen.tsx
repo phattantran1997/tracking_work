@@ -59,7 +59,7 @@ const HistoryScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.backgrounds.default }]}>
-      <Heading style={styles.heading}>Job Timings History</Heading>
+      <Heading style={[styles.heading]}>Job Timings History</Heading>
       <FlatList
         data={jobTimings}
         renderItem={renderItem}
@@ -81,9 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
     marginBottom: 16,
     textAlign: 'center',
   },

@@ -13,11 +13,11 @@ const ProductDetail = ({ route }) => {
   const [jobNo, setJobNo] = useState(item.JobNo);
   const [type, setType] = useState(item.Type);
   const [description, setDescription] = useState(item.Description);
-  const [area, setArea] = useState(item.Area);
-  const [widthDim, setWidthDim] = useState(item.WidthDim);
-  const [depthDim, setDepthDim] = useState(item.DepthDim);
-  const [lengthDim, setLengthDim] = useState(item.LengthDim);
-  const [weight, setWeight] = useState(item.Weight);
+  const [area, setArea] = useState(item.Area.toString());
+  const [widthDim, setWidthDim] = useState(item.WidthDim.toString());
+  const [depthDim, setDepthDim] = useState(item.DepthDim.toString());
+  const [lengthDim, setLengthDim] = useState(item.LengthDim.toString());
+  const [weight, setWeight] = useState(item.Weight.toString());
 
   const handleEdit = async () => {
     try {
@@ -27,11 +27,11 @@ const ProductDetail = ({ route }) => {
         JobNo: jobNo,
         Type: type,
         Description: description,
-        Area: area,
-        WidthDim: widthDim,
-        DepthDim: depthDim,
-        LengthDim: lengthDim,
-        Weight: weight,
+        Area: parseFloat(area),
+        WidthDim: parseFloat(widthDim),
+        DepthDim: parseFloat(depthDim),
+        LengthDim: parseFloat(lengthDim),
+        Weight: parseFloat(weight),
       });
       if (response.status === 200) {
         Alert.alert('Success', 'Product edited successfully');
@@ -73,10 +73,11 @@ const ProductDetail = ({ route }) => {
             <BodyText style={styles.label}>Type:</BodyText>
             <TextInput
               style={styles.value}
-              value={type}
+              value={type.toString()}
               onChangeText={setType}
             />
           </View>
+          <View style={styles.row}>
           <BodyText style={styles.label}>Description:</BodyText>
           <TextInput
             style={styles.value}
@@ -84,30 +85,39 @@ const ProductDetail = ({ route }) => {
             onChangeText={setDescription}
             multiline
           />
+          </View>
+         
           <View style={styles.row}>
             <BodyText style={styles.label}>Area:</BodyText>
             <TextInput
               style={styles.value}
               value={area}
               onChangeText={setArea}
+              keyboardType="numeric"
             />
           </View>
           <View style={styles.row}>
             <BodyText style={styles.label}>Dimensions:</BodyText>
             <TextInput
-              style={styles.value}
+              style={styles.dimensionInput}
               value={widthDim}
               onChangeText={setWidthDim}
+              keyboardType="numeric"
+              placeholder="Width"
             />
             <TextInput
-              style={styles.value}
+              style={styles.dimensionInput}
               value={depthDim}
               onChangeText={setDepthDim}
+              keyboardType="numeric"
+              placeholder="Depth"
             />
             <TextInput
-              style={styles.value}
+              style={styles.dimensionInput}
               value={lengthDim}
               onChangeText={setLengthDim}
+              keyboardType="numeric"
+              placeholder="Length"
             />
           </View>
           <View style={styles.row}>
@@ -116,6 +126,7 @@ const ProductDetail = ({ route }) => {
               style={styles.value}
               value={weight}
               onChangeText={setWeight}
+              keyboardType="numeric"
             />
           </View>
         </View>
@@ -128,6 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 20,
+    backgroundColor: '#f5f5f5',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -138,12 +150,21 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
@@ -159,12 +180,15 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
     alignItems: 'center',
+
   },
   label: {
     fontWeight: 'bold',
-    marginRight: 5,
+    marginRight: 10,
+    fontSize: 16,
   },
   value: {
     flex: 1,
@@ -172,6 +196,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ccc',
     paddingBottom: 2,
+  },
+  dimensionInput: {
+    flex: 1,
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    paddingBottom: 2,
+    marginHorizontal: 5,
   },
 });
 

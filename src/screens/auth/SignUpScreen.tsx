@@ -23,10 +23,10 @@ export default function SignUpScreen() {
                 username,
                 password,
                 name,
-                role: "Staff"
+                role: "staff"
             });
 
-            if (response.data.success) {
+            if (response.data.errCode === 200) {
                 Alert.alert('Signed up successfully');
                 navigation.goBack(); // Navigate back to LoginScreen
             } else {
