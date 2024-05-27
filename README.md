@@ -1,13 +1,18 @@
-# 📱 My React Native App
+# 📱 My React Native Tracking Work App (Expo)
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.68.2-success?style=flat-square)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-46.0.16-blueviolet?style=flat-square)](https://expo.dev/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
-This is a React Native application that does something awesome! 🚀
+This is a React Native application built with Expo, providing functionality for staff and managers.
 
 ## 📖 Table of Contents
 
 - [About](#about)
+- [Features](#features)
+  - [Staff Screen](#staff-screen)
+  - [Manager Screen](#manager-screen)
+  - [Dark Mode](#dark-mode)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -15,9 +20,27 @@ This is a React Native application that does something awesome! 🚀
 
 ## 🎉 About
 
-This React Native app is designed to solve a specific problem or provide a unique solution. It leverages the power of React Native to create a cross-platform mobile experience. The app is built using the latest version of React Native and follows best practices for code organization, styling, and performance optimization.
+This React Native app is designed to streamline processes for staff and managers. It leverages the power of Expo to create a cross-platform mobile experience. The app is built using the latest version of React Native and Expo, following best practices for code organization, styling, and performance optimization.
 
-## 🚀 Installation
+## 🚀 Features
+
+### Staff Screen
+
+- **Scan QR Code**: Allows staff to scan QR codes for various purposes.
+- **List of Completed Jobs**: Displays a list of jobs that have been completed by the staff.
+- **List of Completed Products**: Shows a list of products that have been completed.
+- **Manual Input for Job Timings**: Enables staff to manually input job timing information.
+
+### Manager Screen
+
+- **Create QR Code for Products**: Allows managers to generate QR codes for each product.
+- **See Job Handlers**: Displays information about who is handling each job.
+
+### Dark Mode
+
+- **Dark Mode Support**: The app supports a dark mode for both staff and manager screens.
+
+## 🛠️ Installation
 
 To get started with this project, follow these steps:
 
@@ -27,11 +50,11 @@ To get started with this project, follow these steps:
 
 ## 🔧 Usage
 
-To run the app on your local machine, follow these steps:
+To run the app on your local machine using Expo, follow these steps:
 
-1. Start the Metro Bundler: `npm start` or `yarn start`
-2. Run the app on an Android emulator or device: `npm run android` or `yarn android`
-3. Run the app on an iOS simulator or device: `npm run ios` or `yarn ios`
+1. Start the Expo development server: `expo start`
+2. Use the Expo client app on your iOS or Android device to scan the QR code and run the app.
+3. Alternatively, you can use an emulator or simulator to run the app.
 
 ## 🌟 Contributing
 
