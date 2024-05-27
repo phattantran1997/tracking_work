@@ -44,15 +44,15 @@ This React Native app is designed to streamline processes for staff and managers
 
 To get started with this project, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/react-native-app.git`
-2. Navigate to the project directory: `cd react-native-app`
+1. Clone the repository: `git clone https://github.com/phattantran1997/tracking_work.git`
+2. Navigate to the project directory: `cd tracking_work`
 3. Install dependencies: `npm install` or `yarn install`
 
 ## 🔧 Usage
 
 To run the app on your local machine using Expo, follow these steps:
 
-1. Start the Expo development server: `expo start`
+1. Start the Expo development server: `npm run start`
 2. Use the Expo client app on your iOS or Android device to scan the QR code and run the app.
 3. Alternatively, you can use an emulator or simulator to run the app.
 
