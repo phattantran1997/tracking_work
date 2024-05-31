@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import useThemeContext from '../../theme/useThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { NGROK_SERVER } from '../../services/ConstantFile';
+import { NGROK_SERVER } from '../../services/ConstantUtil';
 import icon from '../../../assets/logo.png'
 export default function LoginScreen() {
   const [username, setUsername] = useState('');

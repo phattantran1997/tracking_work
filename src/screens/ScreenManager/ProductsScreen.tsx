@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TextInput } from 'react-native';
 import axios from 'axios';
-import { NGROK_SERVER } from '../../services/ConstantFile';
+import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import QRCode from 'react-native-qrcode-svg';
 
 const ProductScreen = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const accessToken = await AsyncStorage.getItem('accessToken');
 
-        const response = await axios.get(`${NGROK_SERVER}/api/products/getAll`, {headers: {
-          Authorization: `${accessToken}`,
-        }});
+        const response = await axios.get(`${NGROK_SERVER}/api/products/getAll`, {
+          headers: {
+            Authorization: `${accessToken}`,
+          }
+        });
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -27,7 +30,18 @@ const ProductScreen = () => {
 
     fetchProducts();
   }, []);
+  const handleSearch = (text) => {
+    setSearchText(text);
+  };
+  const filterProducts = () => {
+    if (searchText.trim() === '') {
+      return products;
+    }
 
+    return products.filter((product) =>
+      product.Name.toLowerCase().includes(searchText.toLowerCase())
+    );
+  };
   const renderProductItem = ({ item }) => (
     <View style={styles.productContainer}>
       <Text style={styles.productText}>Name: {item.Name}</Text>
@@ -48,8 +62,14 @@ const ProductScreen = () => {
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search by name"
+        onChangeText={handleSearch}
+        value={searchText}
+      />
       <FlatList
-        data={products}
+        data={filterProducts()}
         renderItem={renderProductItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
@@ -63,6 +83,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f8f8f8',
+  },
+  searchInput: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
   },
   listContainer: {
     paddingBottom: 16,

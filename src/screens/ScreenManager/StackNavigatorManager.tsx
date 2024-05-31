@@ -14,10 +14,10 @@ function HomeManager() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'GenerateQRScreen') {
+          if (route.name === 'Generate QR') {
             iconName = focused ? 'qr-code' : 'qr-code-outline';
-          } else if (route.name === 'ProductScreen') {
-            iconName = focused ? 'apps' : 'apps-outline';
+          } else if (route.name === 'Products') {
+            iconName = focused ? 'cube' : 'cube-outline';
           } else if (route.name === 'Jobtimings') {
             iconName = focused ? 'time' : 'time-outline';
           }
@@ -28,8 +28,8 @@ function HomeManager() {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="GenerateQRScreen" component={GenerateQRScreen} />
-      <Tab.Screen name="ProductScreen" component={ProductScreen} />
+      <Tab.Screen name="Generate QR" component={GenerateQRScreen} />
+      <Tab.Screen name="Products" component={ProductScreen} />
       <Tab.Screen name="Jobtimings" component={ListAllJobtimings} />
     </Tab.Navigator>
   );

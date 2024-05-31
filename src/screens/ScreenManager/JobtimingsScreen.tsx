@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SectionList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import Collapsible from 'react-native-collapsible';
-import { NGROK_SERVER } from '../../services/ConstantFile';
+import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BodyText from '../../components/BodyText';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const JobTimingsComponent = () => {
   const [jobTimings, setJobTimings] = useState([]);
@@ -37,7 +38,7 @@ const JobTimingsComponent = () => {
     const grouped = data.reduce((acc, item) => {
       const { OperatorID } = item;
       if (!acc[OperatorID]) {
-        acc[OperatorID] = { title: OperatorID, data: [] };
+        acc[OperatorID] = { operator: OperatorID, data: [] };
       }
       acc[OperatorID].data.push(item);
       return acc;
@@ -48,7 +49,7 @@ const JobTimingsComponent = () => {
 
     const initialCollapsedState = {};
     groupedArray.forEach((group) => {
-      initialCollapsedState[group.title] = true;
+      initialCollapsedState[group.operator] = true;
     });
     setCollapsedState(initialCollapsedState);
   };
@@ -83,13 +84,23 @@ const JobTimingsComponent = () => {
     </View>
   );
 
-  const renderSectionHeader = ({ section: { title } }) => (
-    <View  key={title} style={styles.collapsibleContainer}>
-      <TouchableOpacity style={styles.collapsibleHeader} onPress={() => toggleCollapse(title)}>
-        <Text style={styles.headerText}>Operator ID: {title}</Text>
+  const renderSectionHeader = ({ section: { operator } }) => (
+    <View key={operator} style={styles.collapsibleContainer}>
+      <TouchableOpacity
+        style={styles.collapsibleHeader}
+        onPress={() => toggleCollapse(operator)}
+      >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Operator ID: {operator}</Text>
+          <Icon name={collapsedState[operator] ? "chevron-down" : "chevron-up"} size={20} color="#333" />
+        </View>
       </TouchableOpacity>
-      <Collapsible collapsed={collapsedState[title]}>
-        {groupedJobTimings.find(group => group.title === title).data.map((item) => renderJobTimingItem({ item }))}
+      <Collapsible collapsed={collapsedState[operator]}>
+        {groupedJobTimings
+          .find((group) => group.operator === operator)
+          .data.map((item) => (
+            <View key={item.id}>{renderJobTimingItem({ item })}</View>
+          ))}
       </Collapsible>
     </View>
   );
@@ -106,7 +117,7 @@ const JobTimingsComponent = () => {
     <SectionList
       sections={groupedJobTimings}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={() => null}  // renderJobTimingItem will be handled inside renderSectionHeader
+      renderItem={() => null}
       renderSectionHeader={renderSectionHeader}
       stickySectionHeadersEnabled={false}
     />
@@ -120,10 +131,24 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   collapsibleContainer: {
-    marginVertical: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
+    marginVertical: 10,
+    borderWidth: 0,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    overflow: 'hidden',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   collapsibleHeader: {
     padding: 8,

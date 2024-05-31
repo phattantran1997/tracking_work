@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import { NGROK_SERVER } from '../../services/ConstantFile';
+import { NGROK_SERVER } from '../../services/ConstantUtil';
 import icon from '../../../assets/logo.png'
 
 export default function SignUpScreen() {

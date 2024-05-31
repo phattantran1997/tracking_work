@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, ScrollView, RefreshControl, Pressable, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NGROK_SERVER } from '../../../services/ConstantFile';
+import { NGROK_SERVER } from '../../../services/ConstantUtil';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/MaterialIcons';

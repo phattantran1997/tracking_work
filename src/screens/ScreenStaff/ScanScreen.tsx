@@ -4,7 +4,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { Alert, StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
 import { CameraView ,useCameraPermissions} from 'expo-camera';
 import axios from 'axios';
-import { NGROK_SERVER } from '../../services/ConstantFile';
+import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BodyText from '../../components/BodyText';
 

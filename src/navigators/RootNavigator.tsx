@@ -9,11 +9,11 @@ import logo from '../../assets/logo.png';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Image } from 'react-native';
-import HomeTabNavigator from '../screens/PageStaff/StackNavigatorStaff';
-import ProductDetail from '../screens/PageStaff/products/ProductDetail';
+import HomeTabNavigator from '../screens/ScreenStaff/StackNavigatorStaff';
+import ProductDetail from '../screens/ScreenStaff/products/ProductDetail';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
-import HomeManager from '../screens/PageManager/StackNavigatorManager';
+import HomeManager from '../screens/ScreenManager/StackNavigatorManager';
 const Stack = createNativeStackNavigator();
 function LogoTitle() {
     return (

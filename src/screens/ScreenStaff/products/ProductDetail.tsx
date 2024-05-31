@@ -4,11 +4,11 @@ import QRCode from 'react-native-qrcode-svg';
 import BodyText from '../../../components/BodyText';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
-import { NGROK_SERVER } from '../../../services/ConstantFile';
+import { NGROK_SERVER } from '../../../services/ConstantUtil';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = ({ route }) => {
   const { item } = route.params;
-
   const [name, setName] = useState(item.Name);
   const [jobNo, setJobNo] = useState(item.JobNo);
   const [type, setType] = useState(item.Type);
@@ -21,7 +21,9 @@ const ProductDetail = ({ route }) => {
 
   const handleEdit = async () => {
     try {
-      const response = await axios.post(`${NGROK_SERVER}/api/products/editOne`, {
+      const token = await AsyncStorage.getItem('accessToken');
+      const headers = { Authorization: `${token}` };
+      const response = await axios.put(`${NGROK_SERVER}/api/products/editOne`, {
         id: item.id,
         Name: name,
         JobNo: jobNo,
@@ -32,7 +34,8 @@ const ProductDetail = ({ route }) => {
         DepthDim: parseFloat(depthDim),
         LengthDim: parseFloat(lengthDim),
         Weight: parseFloat(weight),
-      });
+      }, { headers });
+
       if (response.status === 200) {
         Alert.alert('Success', 'Product edited successfully');
       } else {
@@ -48,7 +51,7 @@ const ProductDetail = ({ route }) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageContainer}>
-          {item.QRCode && <QRCode value={JSON.stringify({ID:item.id, Name : item.Name , JobNo: item.JobNo}) } size={200} />}
+          {item.QRCode && <QRCode value={JSON.stringify({ ID: item.id, Name: item.Name, JobNo: item.JobNo })} size={200} />}
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.headerRow}>
@@ -78,15 +81,14 @@ const ProductDetail = ({ route }) => {
             />
           </View>
           <View style={styles.row}>
-          <BodyText style={styles.label}>Description:</BodyText>
-          <TextInput
-            style={styles.value}
-            value={description}
-            onChangeText={setDescription}
-            multiline
-          />
+            <BodyText style={styles.label}>Description:</BodyText>
+            <TextInput
+              style={styles.value}
+              value={description}
+              onChangeText={setDescription}
+              multiline
+            />
           </View>
-         
           <View style={styles.row}>
             <BodyText style={styles.label}>Area:</BodyText>
             <TextInput
@@ -183,7 +185,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     alignItems: 'center',
-
   },
   label: {
     fontWeight: 'bold',

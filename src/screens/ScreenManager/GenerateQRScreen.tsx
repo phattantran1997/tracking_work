@@ -16,7 +16,7 @@ import { Text } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { BluetoothManager } from "tp-react-native-bluetooth-printer";
-import { NGROK_SERVER } from "../../services/ConstantFile";
+import { NGROK_SERVER } from "../../services/ConstantUtil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BodyText from "../../components/BodyText";
 
