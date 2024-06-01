@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TextInput, RefreshControl } from 'react-native';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,27 +9,39 @@ const ProductScreen = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchProducts();  // Call the same function used to fetch products initially
+    } catch (error) {
+      console.error('Error refreshing products:', error);
+    }
+    setRefreshing(false);
+  };
 
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const response = await axios.get(`${NGROK_SERVER}/api/products/getAll`, {
+        headers: {
+          Authorization: `${accessToken}`,
+        }
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem('accessToken');
-
-        const response = await axios.get(`${NGROK_SERVER}/api/products/getAll`, {
-          headers: {
-            Authorization: `${accessToken}`,
-          }
-        });
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, []);
+  
+  
   const handleSearch = (text) => {
     setSearchText(text);
   };
@@ -73,6 +85,12 @@ const ProductScreen = () => {
         renderItem={renderProductItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       />
     </View>
   );

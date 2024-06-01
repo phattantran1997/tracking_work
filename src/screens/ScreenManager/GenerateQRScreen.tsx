@@ -51,9 +51,6 @@ export default function InputScreen() {
         setShowDropdown(true);
     }
 
-
-
-
     const handleInputChange = async () => {
         if (!name || !type || !description) {
             Alert.alert("Error", "Please fill in all the input fields.");
@@ -72,29 +69,39 @@ export default function InputScreen() {
             LengthDim: parseFloat(length),
             Description: description,
             Area: parseFloat(width) * parseFloat(height) * parseFloat(length),
-            Weight: parseFloat(weight),
-            QRCode: `Name: ${name}, JobNo: ${jobNo}`
+            Weight: parseFloat(weight)
         };
+    
         console.log(data);
         try {
             const token = await AsyncStorage.getItem('accessToken');
             const headers = {
-                Authorization: `${token}`
+                Authorization: `${token}` // Ensure it's Bearer token if required
             };
-
+    
             const response = await axios.post(NGROK_SERVER + '/api/products/createOne', data, { headers });
             if (response.data.errCode === 200) {
-                let value= response.data.data;
-                setQRCode(JSON.stringify({ID:value.id, Name : value.Name , JobNo: value.JobNo}));
-                Alert.alert('Product created successfully');
+                let product = response.data.data;
+                const qrCodeData = { ID: product.id, Name: product.Name, JobNo: product.JobNo };
+                console.log(response.data);
+                const qrCodeUpdateResponse = await axios.put(`${NGROK_SERVER}/api/products/updateQRCode?id=${product.id}`, qrCodeData, { headers });
+    
+                if (qrCodeUpdateResponse.data.status === 200) {
+                    // Successfully updated the QRCode, now setting it in the state
+                    setQRCode(JSON.stringify(qrCodeData));
+                    Alert.alert('Product created and QR code updated successfully');
+                } else {
+                    Alert.alert('Failed to update QR code');
+                }
             } else {
                 Alert.alert('Product creation failed');
                 return;
             }
         } catch (error) {
             console.error(error);
+            Alert.alert('Error', error.message || 'An error occurred');
         }
-    };
+    };    
 
 
     const handlePrint = async () => {

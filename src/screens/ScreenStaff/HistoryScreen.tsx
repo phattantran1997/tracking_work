@@ -83,7 +83,9 @@ const HistoryScreen = () => {
       <BodyText style={styles.jobTimingText}>Status: {item.Status}</BodyText>
     </View>
   );
-
+  if (!jobTimings.length) {
+    return <Text style={styles.noDataText}>No job timings available</Text>;
+  }
   return (
     <View style={[styles.container, { backgroundColor: colors.backgrounds.default }]}>
       <Heading style={styles.heading}>Job Timings History</Heading>
@@ -136,6 +138,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+  },
+  noDataText: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 18,
+    color: '#555',
   },
   jobTimingText: {
     fontSize: 16,

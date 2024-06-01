@@ -84,7 +84,6 @@ export default function ScanScreen() {
     return (
       <View style={styles.container}>
         <BodyText style={[styles.title]}>Scan a barcode to start your job.!</BodyText>
-        {/* <Text style={styles.paragraph}>Scan a barcode to start your job.</Text> */}
         {isFocused ? renderCamera() : null}
       </View>
     );
