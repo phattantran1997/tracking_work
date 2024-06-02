@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, RefreshControl, TextInput, Text } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl, TextInput, Text, Alert } from 'react-native';
 import BodyText from '../../components/BodyText';
 import Heading from '../../components/Heading';
 import useThemeContext from '../../theme/useThemeContext';
@@ -10,7 +10,6 @@ import { NGROK_SERVER } from '../../services/ConstantUtil';
 const HistoryScreen = () => {
   const { colors } = useThemeContext();
   const [jobTimings, setJobTimings] = useState([]);
-  const [filteredTimings, setFilteredTimings] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,19 +19,30 @@ const HistoryScreen = () => {
       const token = await AsyncStorage.getItem('accessToken');
       const response = await axios.get(`${NGROK_SERVER}/api/JobTimings/getByOperatorID?operatorID=${userLogin}`, {
         headers: {
-          Authorization: `${token}`, // Correct Authorization header format
+          Authorization: `${token}`,
         },
       });
-
-      if (response.status === 200) {
-        setJobTimings(response.data);
-        setFilteredTimings(response.data);
-      }
+      console.log(response);
+      setJobTimings(response.data);
     } catch (error) {
       if (error.response) {
-        console.warn('HTTP error:', error.response.status, error.response.data);
+        // Handle HTTP errors
+        console.error('Error fetching job timings:', error.response.status, error.response.data);
+        if (error.response.status === 404) {
+          Alert.alert("Error", "No job timings found for the specified operator.");
+        } else {
+          Alert.alert("Error", `An error occurred: ${error.response.status}`);
+        }
+        setJobTimings([]); // Clear job timings as the data is not available
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Error fetching job timings: No response received:', error.request);
+        Alert.alert("Error", "No response from server. Check your network connection.");
+        setJobTimings([]);
       } else {
-        console.error('Error fetching job timings:', error);
+        console.error('Error:', error.message);
+        Alert.alert("Error", "Error setting up your request.");
+        setJobTimings([]);
       }
     }
   };
@@ -41,23 +51,9 @@ const HistoryScreen = () => {
     fetchJobTimings();
   }, []);
 
-  useEffect(() => {
-    const filteredData = jobTimings.filter(item =>
-      item.JobNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.ProductID.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.OperatorID.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.Status.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredTimings(filteredData);
-  }, [searchQuery, jobTimings]);
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    try {
-      await fetchJobTimings();
-    } catch (error) {
-      console.error('Failed to refresh:', error);
-    }
+    await fetchJobTimings();
     setRefreshing(false);
   }, [fetchJobTimings]);
 
@@ -67,25 +63,18 @@ const HistoryScreen = () => {
         return '#d4edda';
       case 'Doing':
         return '#fff3cd';
-      default:
+      default:c
         return '#f0f0f0';
     }
-  };
-
-  const renderItem = ({ item }) => (
-    <View style={[styles.jobTimingContainer, { backgroundColor: getBackgroundColor(item.Status) }]}>
-      <BodyText style={styles.jobTimingText}>Job No: {item.JobNo}</BodyText>
-      <BodyText style={styles.jobTimingText}>Product ID: {item.ProductID}</BodyText>
-      <BodyText style={styles.jobTimingText}>Operator ID: {item.OperatorID}</BodyText>
-      <BodyText style={styles.jobTimingText}>Job Time: {item.JobTime}</BodyText>
-      <BodyText style={styles.jobTimingText}>Job Day: {item.JobDay}</BodyText>
-      <BodyText style={styles.jobTimingText}>Duration: {item.Duration}</BodyText>
-      <BodyText style={styles.jobTimingText}>Status: {item.Status}</BodyText>
-    </View>
-  );
-  if (!jobTimings.length) {
-    return <Text style={styles.noDataText}>No job timings available</Text>;
   }
+
+  const filteredTimings = jobTimings.filter(item =>
+    item.JobNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.ProductID.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.OperatorID.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.Status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: colors.backgrounds.default }]}>
       <Heading style={styles.heading}>Job Timings History</Heading>
@@ -97,7 +86,22 @@ const HistoryScreen = () => {
       />
       <FlatList
         data={filteredTimings}
-        renderItem={renderItem}
+        ListEmptyComponent={
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={styles.noDataText}>No job timings available</Text>
+          </View>
+        }
+        renderItem={({ item }) => (
+          <View style={[styles.jobTimingContainer, { backgroundColor: getBackgroundColor(item.Status) }]}>
+            <BodyText style={styles.jobTimingText}>Job No: {item.JobNo}</BodyText>
+            <BodyText style={styles.jobTimingText}>Product ID: {item.ProductID}</BodyText>
+            <BodyText style={styles.jobTimingText}>Operator ID: {item.OperatorID}</BodyText>
+            <BodyText style={styles.jobTimingText}>Job Time: {item.JobTime}</BodyText>
+            <BodyText style={styles.jobTimingText}>Job Day: {item.JobDay}</BodyText>
+            <BodyText style={styles.jobTimingText}>Duration: {item.Duration}</BodyText>
+            <BodyText style={styles.jobTimingText}>Status: {item.Status}</BodyText>
+          </View>
+        )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.flatListContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   flatListContent: {
-    flexGrow: 1,
+    flexGrow: 1, // Ensures the FlatList content container expands
     paddingBottom: 16,
   },
   jobTimingContainer: {
@@ -140,9 +144,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   noDataText: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     fontSize: 18,
     color: '#555',
   },

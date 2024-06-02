@@ -15,6 +15,7 @@ import Heading from '../../components/Heading';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantUtil';
 import useThemeContext from '../../theme/useThemeContext';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const ManualInputScreen = () => {
     const [productID, setProductID] = useState('');
