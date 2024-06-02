@@ -5,7 +5,7 @@ import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import QRCode from 'react-native-qrcode-svg';
 
-const ProductScreen = () => {
+const ListProductScreen = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -137,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductScreen;
+export default ListProductScreen;

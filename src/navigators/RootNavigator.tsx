@@ -10,7 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Image } from 'react-native';
 import HomeTabNavigator from '../screens/ScreenStaff/StackNavigatorStaff';
-import ProductDetail from '../screens/ScreenStaff/products/ProductDetail';
+import ProductDetail from '../screens/ScreenManager/products/ProductDetail';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
 import HomeManager from '../screens/ScreenManager/StackNavigatorManager';

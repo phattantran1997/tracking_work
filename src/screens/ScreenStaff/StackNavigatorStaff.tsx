@@ -4,10 +4,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AboutScreen from './AboutScreen';
 import HistoryScreen from './HistoryScreen';
 import ScanScreen from './ScanScreen';
-import HomeListProducts from './products/HomeListProducts';
 
 import useThemeContext from '../../theme/useThemeContext';
 import ManualInputScreen from './ManualInputScreen';
+import ListProductScreen from './ProductsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +46,7 @@ const HomeTabNavigator = () => {
     >
 
       <Tab.Screen name="About" component={AboutScreen} />
-      <Tab.Screen name="List" component={HomeListProducts} />
+      <Tab.Screen name="List" component={ListProductScreen} />
       <Tab.Screen name="Scan" component={ScanScreen} />
       <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Manual" component={ManualInputScreen} />

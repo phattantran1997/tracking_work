@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GenerateQRScreen from './GenerateQRScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ListAllJobtimings from './JobtimingsScreen';
-import ProductScreen from './ProductsScreen';
+import HomeListProducts from './products/HomeListProducts';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +29,7 @@ function HomeManager() {
       })}
     >
       <Tab.Screen name="Generate QR" component={GenerateQRScreen} />
-      <Tab.Screen name="Products" component={ProductScreen} />
+      <Tab.Screen name="Products" component={HomeListProducts} />
       <Tab.Screen name="Jobtimings" component={ListAllJobtimings} />
     </Tab.Navigator>
   );
