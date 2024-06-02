@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TextInput, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TextInput, RefreshControl, Alert } from 'react-native';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantUtil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ const ProductScreen = () => {
     try {
       await fetchProducts();  // Call the same function used to fetch products initially
     } catch (error) {
+      Alert.alert(error.message);
       console.error('Error refreshing products:', error);
     }
     setRefreshing(false);
@@ -36,12 +37,12 @@ const ProductScreen = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchProducts();
   }, []);
-  
-  
+
+
   const handleSearch = (text) => {
     setSearchText(text);
   };

@@ -14,7 +14,11 @@ export default function SignUpScreen() {
 
     const handleSignUp = async () => {
         if (password !== confirmPassword) {
-            Alert.alert("Passwords don't match");
+            Alert.alert("Error", "Passwords don't match");
+            return;
+        }
+        if (!username || !name || !password || !confirmPassword) {
+            Alert.alert("Error", "Please fill all fields");
             return;
         }
 
@@ -26,18 +30,15 @@ export default function SignUpScreen() {
                 role: "staff"
             });
 
-            if (response.data.errCode === 200) {
-                Alert.alert('Signed up successfully');
-                navigation.goBack(); // Navigate back to LoginScreen
+            if (response.status === 200) {
+                Alert.alert('Success', 'Signed up successfully');
+                navigation.navigate('Login');
             } else {
-                Alert.alert('Sign up failed');
+                throw new Error('Unexpected error occurred');
             }
         } catch (error) {
-            console.error(error);
+            Alert.alert('Sign Up Error', error.response?.data?.message || error.message);
         }
-
-        navigation.navigate('Login');
-
     };
 
     return (

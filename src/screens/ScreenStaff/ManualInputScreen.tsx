@@ -11,7 +11,6 @@ import {
     Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Heading from '../../components/Heading';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantUtil';

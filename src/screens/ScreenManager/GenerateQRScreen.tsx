@@ -72,7 +72,6 @@ export default function InputScreen() {
             Weight: parseFloat(weight)
         };
     
-        console.log(data);
         try {
             const token = await AsyncStorage.getItem('accessToken');
             const headers = {

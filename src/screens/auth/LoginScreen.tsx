@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { NGROK_SERVER } from '../../services/ConstantUtil';
 import icon from '../../../assets/logo.png'
+
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -15,18 +16,16 @@ export default function LoginScreen() {
   useEffect(() => {
     const validateToken = async () => {
       const user = await checkAccessToken();
-      if (user.role ==='staff') {
+      if (user.role === 'staff') {
         navigation.reset({
           index: 0,
           routes: [{ name: 'Home' }],
         });
-      }else if(user.role ==='manager'){
+      } else if (user.role === 'manager') {
         navigation.reset({
           index: 0,
           routes: [{ name: 'HomeManager' }],
         });
-      }else{
-        
       }
     };
     validateToken();
@@ -42,10 +41,19 @@ export default function LoginScreen() {
           Authorization: `${accessToken}`,
         },
       });
+
       return response.data;
     } catch (error) {
-      console.error('Error checking access token', error);
-      return false;
+      if (error.response && error.response.status === 401) {
+        // Handle unauthorized error
+        console.error('Unauthorized: No valid token found');
+        await AsyncStorage.removeItem('accessToken');
+        return false;
+      } else {
+        // Handle other errors
+        console.error('Error checking access token', error);
+        return false;
+      }
     }
   };
 
