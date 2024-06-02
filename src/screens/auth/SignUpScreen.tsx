@@ -61,6 +61,7 @@ export default function SignUpScreen() {
                 onChangeText={setPassword}
                 value={password}
                 placeholder="Password"
+                textContentType={'oneTimeCode'}
                 secureTextEntry
             />
             <TextInput
@@ -68,6 +69,7 @@ export default function SignUpScreen() {
                 onChangeText={setConfirmPassword}
                 value={confirmPassword}
                 placeholder="Confirm Password"
+                textContentType={'oneTimeCode'}
                 secureTextEntry
             />
             <TouchableOpacity style={styles.button} onPress={handleSignUp}>
